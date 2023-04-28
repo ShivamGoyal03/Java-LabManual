@@ -2,38 +2,38 @@
 // Shivam
 // 21CSU090
 
-class NQueens {
-    private int[][] board;
-    private int size;
+public class Practical9 {
+    public static void solveNQueens(int n) {
+        int[][] board = new int[n][n];
 
-    public NQueens(int n) {
-        board = new int[n][n];
-        size = n;
+        if (solveNQueensUtil(board, 0)) {
+            printBoard(board);
+        } else {
+            System.out.println("No solution exists");
+        }
     }
 
-    public boolean solve() {
-        return solve(0);
-    }
-
-    private boolean solve(int col) {
-        if (col >= size) {
+    private static boolean solveNQueensUtil(int[][] board, int col) {
+        if (col == board.length) {
             return true;
         }
 
-        for (int row = 0; row < size; row++) {
-            if (isValid(row, col)) {
+        for (int row = 0; row < board.length; row++) {
+            if (isSafe(board, row, col)) {
                 board[row][col] = 1;
-                if (solve(col + 1)) {
+
+                if (solveNQueensUtil(board, col + 1)) {
                     return true;
                 }
-                board[row][col] = 0;
+
+                board[row][col] = 0; // backtrack
             }
         }
 
         return false;
     }
 
-    private boolean isValid(int row, int col) {
+    private static boolean isSafe(int[][] board, int row, int col) {
         for (int i = 0; i < col; i++) {
             if (board[row][i] == 1) {
                 return false;
@@ -46,7 +46,7 @@ class NQueens {
             }
         }
 
-        for (int i = row, j = col; i < size && j >= 0; i++, j--) {
+        for (int i = row, j = col; i < board.length && j >= 0; i++, j--) {
             if (board[i][j] == 1) {
                 return false;
             }
@@ -55,23 +55,16 @@ class NQueens {
         return true;
     }
 
-    public void printSolution() {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                System.out.print(board[i][j] + " ");
+    private static void printBoard(int[][] board) {
+        for (int[] row : board) {
+            for (int cell : row) {
+                System.out.print(cell == 1 ? "Q " : ". ");
             }
             System.out.println();
         }
     }
-}
 
-public class Practical9{
     public static void main(String[] args) {
-        NQueens nQueens = new NQueens(4);
-        if (nQueens.solve()) {
-            nQueens.printSolution();
-        } else {
-            System.out.println("No solution found");
-        }
+        solveNQueens(8);
     }
 }
